@@ -1,0 +1,7 @@
+.vagrant
+node_modules
+*.zip
+*.png
+chrome-linux
+chrome-mac
+chrome-win32
