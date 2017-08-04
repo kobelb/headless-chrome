@@ -22,6 +22,7 @@
 # under the License.
 
 Vagrant.configure(2) do |config|
+  
   config.vm.define "buildhost" do |config|
     config.vm.box = "elastic/ubuntu-16.04-x86_64"
     config.vm.provider "virtualbox" do |v|

@@ -16,6 +16,24 @@ const instrument = async (description, promise) => {
 const width = 1950;
 const height = 1200;
 
+const platform = process.platform;
+let fileSuffix;
+let chromePath;
+
+if (platform === 'linux') {
+    chromePath = path.join(__dirname, 'chrome-linux/chrome');
+    fileSuffix = 'linux';
+} else if (platform === 'darwin' || platform === 'openbsd' || platform === 'freebsd') {
+    chromePath = path.join(__dirname, 'chrome-mac/Chromium.app/Contents/MacOS/Chromium');
+    fileSuffix = 'mac';
+} else if (platform === 'win32') {
+    chromePath = path.join(__dirname, 'chrome-win32\\chrome.exe')
+    fileSuffix = 'win32';
+} else {
+    const msg = 'Unsupported platform: ' + platform;
+    throw new Error(msg);
+}
+
 const url = `http://10.0.1.24:5601/app/kibana#/dashboard/ce22fbb0-778e-11e7-a6c7-ff2fd5300286?_g=(refreshInterval:(display:Off,pause:!f,value:0),time:(from:now-90d,mode:quick,to:now))&_a=(description:'',filters:!(),fullScreenMode:!f,options:(darkTheme:!f),panels:!((col:1,id:a42ec780-778e-11e7-a6c7-ff2fd5300286,panelIndex:1,row:1,size_x:6,size_y:3,type:visualization),(col:7,id:a42ec780-778e-11e7-a6c7-ff2fd5300286,panelIndex:2,row:1,size_x:6,size_y:3,type:visualization),(col:1,id:a42ec780-778e-11e7-a6c7-ff2fd5300286,panelIndex:3,row:4,size_x:6,size_y:3,type:visualization),(col:7,id:a42ec780-778e-11e7-a6c7-ff2fd5300286,panelIndex:4,row:4,size_x:6,size_y:3,type:visualization),(col:1,id:a42ec780-778e-11e7-a6c7-ff2fd5300286,panelIndex:5,row:7,size_x:6,size_y:3,type:visualization),(col:7,id:adb151b0-778e-11e7-a6c7-ff2fd5300286,panelIndex:6,row:7,size_x:6,size_y:3,type:visualization),(col:1,id:adb151b0-778e-11e7-a6c7-ff2fd5300286,panelIndex:7,row:10,size_x:6,size_y:3,type:visualization),(col:7,id:adb151b0-778e-11e7-a6c7-ff2fd5300286,panelIndex:8,row:10,size_x:6,size_y:3,type:visualization),(col:1,id:adb151b0-778e-11e7-a6c7-ff2fd5300286,panelIndex:9,row:13,size_x:6,size_y:3,type:visualization),(col:1,columns:!(referer,url),id:bd793c70-778e-11e7-a6c7-ff2fd5300286,panelIndex:13,row:16,size_x:6,size_y:3,sort:!('@timestamp',desc),type:search),(col:7,columns:!(referer,url),id:bd793c70-778e-11e7-a6c7-ff2fd5300286,panelIndex:14,row:13,size_x:6,size_y:3,sort:!('@timestamp',desc),type:search),(col:1,columns:!(referer,url),id:bd793c70-778e-11e7-a6c7-ff2fd5300286,panelIndex:15,row:19,size_x:6,size_y:3,sort:!('@timestamp',desc),type:search),(col:7,columns:!(referer,url),id:bd793c70-778e-11e7-a6c7-ff2fd5300286,panelIndex:17,row:16,size_x:6,size_y:3,sort:!('@timestamp',desc),type:search),(col:1,columns:!(referer,url),id:bd793c70-778e-11e7-a6c7-ff2fd5300286,panelIndex:18,row:22,size_x:6,size_y:3,sort:!('@timestamp',desc),type:search),(col:7,columns:!(referer,url),id:bd793c70-778e-11e7-a6c7-ff2fd5300286,panelIndex:19,row:19,size_x:6,size_y:3,sort:!('@timestamp',desc),type:search),(col:1,columns:!(referer,url),id:bd793c70-778e-11e7-a6c7-ff2fd5300286,panelIndex:20,row:25,size_x:6,size_y:3,sort:!('@timestamp',desc),type:search),(col:7,id:adb151b0-778e-11e7-a6c7-ff2fd5300286,panelIndex:21,row:22,size_x:6,size_y:3,type:visualization),(col:1,id:adb151b0-778e-11e7-a6c7-ff2fd5300286,panelIndex:22,row:28,size_x:6,size_y:3,type:visualization),(col:7,id:adb151b0-778e-11e7-a6c7-ff2fd5300286,panelIndex:23,row:25,size_x:6,size_y:3,type:visualization)),query:(language:lucene,query:''),timeRestore:!f,title:'New%20Dashboard',uiState:(),viewMode:view)`;
 
 (async function () {
@@ -27,9 +45,7 @@ const url = `http://10.0.1.24:5601/app/kibana#/dashboard/ce22fbb0-778e-11e7-a6c7
         '--headless',
         '--hide-scrollbars'
         ],
-        // chromePath: path.join(__dirname, 'chrome-mac/Chromium.app/Contents/MacOS/Chromium')
-        // chromePath: path.join(__dirname, 'chrome-linux/chrome')
-        chromePath: path.join(`C:\Users\IEUser\chrome-win32\chrome.exe`)
+        chromePath
     });
 
     console.log('chrome has been launched');
@@ -141,7 +157,7 @@ const url = `http://10.0.1.24:5601/app/kibana#/dashboard/ce22fbb0-778e-11e7-a6c7
 
     const { data } = await instrument('screenshot', Page.captureScreenshot({ fromSurface: true }));
     const buffer = Buffer.from(data, 'base64');
-    const writePath = path.join(__dirname, `screenshot.png`)
+    const writePath = path.join(__dirname, `screenshot-${fileSuffix}.png`)
     await promisify(fs.writeFile, fs)(writePath, buffer);
 
     protocol.close();

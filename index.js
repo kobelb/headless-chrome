@@ -39,7 +39,7 @@ const url = `http://localhost:5601/app/kibana#/dashboard/ce22fbb0-778e-11e7-a6c7
 
     await delay(10000);
 
-    const zoom = 1;
+    const zoom = 2;
     await Emulation.setDeviceMetricsOverride({
         width: width / zoom,
         height: (height / zoom) * 2,
