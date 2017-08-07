@@ -3,6 +3,7 @@ const path = require('path');
 const chromeLauncher = require('chrome-launcher');
 const CDP = require('chrome-remote-interface');
 const { promisify } = require('bluebird');
+import { cropScreenshot } from './crop_screenshot';
 
 const delay = (ms) => new Promise(resolve => setTimeout(() => resolve(), ms));
 
@@ -130,11 +131,11 @@ const url = `http://10.0.1.24:5601/app/kibana#/dashboard/ce22fbb0-778e-11e7-a6c7
         results.push({
             position: {
             boundingClientRect: {
-                top: boundingClientRect.x,
-                left: boundingClientRect.y,
+                y: boundingClientRect.y,
+                x: boundingClientRect.x,
                 width: boundingClientRect.width,
                 height: boundingClientRect.height,
-            },
+            },  
             scroll: {
                 x: window.scrollX,
                 y: window.scrollY
@@ -157,8 +158,22 @@ const url = `http://10.0.1.24:5601/app/kibana#/dashboard/ce22fbb0-778e-11e7-a6c7
 
     const { data } = await instrument('screenshot', Page.captureScreenshot({ fromSurface: true }));
     const buffer = Buffer.from(data, 'base64');
+
     const writePath = path.join(__dirname, `screenshot-${fileSuffix}.png`)
     await promisify(fs.writeFile, fs)(writePath, buffer);
+
+    let i = 0;
+    for (const item of elementPositions) {
+        const partPath = path.join(__dirname, `screenshot-${fileSuffix}-${i++}.png`)
+        const { scroll, boundingClientRect } = item.position;
+        const cropPosition = {
+            x: scroll.x + (boundingClientRect.x * zoom),
+            y: scroll.y + (boundingClientRect.y * zoom),
+            height: boundingClientRect.height * zoom,
+            width: boundingClientRect.width * zoom,
+        };
+        await cropScreenshot(buffer, cropPosition, partPath);
+    }
 
     protocol.close();
     chrome.kill();

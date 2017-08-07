@@ -16,6 +16,7 @@
     "babel-register": "^6.23.0",
     "bluebird": "^3.5.0",
     "chrome-launcher": "^0.3.2",
-    "chrome-remote-interface": "^0.24.3"
+    "chrome-remote-interface": "^0.24.3",
+    "sharp": "^0.18.2"
   }
 }
