@@ -3,6 +3,7 @@ const path = require('path');
 const chromeLauncher = require('chrome-launcher');
 const CDP = require('chrome-remote-interface');
 const { oneThenCrop } = require('./one_then_crop');
+const { individualScreenshots } = require('./individual_screenshots');
 const { instrument } = require('./instrument');
 
 const delay = (ms) => new Promise(resolve => setTimeout(() => resolve(), ms));
@@ -151,6 +152,7 @@ const url = `http://10.0.1.24:5601/app/kibana#/dashboard/ce22fbb0-778e-11e7-a6c7
     const elementPositions = result.result.value;
 
     await instrument('one then crop', oneThenCrop(fileSuffix, Page, elementPositions, zoom));
+    await instrument('individual screenshots', individualScreenshots(fileSuffix, Page, elementPositions, zoom));
 
     protocol.close();
     chrome.kill();
