@@ -2,17 +2,11 @@ const fs = require('fs');
 const path = require('path');
 const chromeLauncher = require('chrome-launcher');
 const CDP = require('chrome-remote-interface');
-const { promisify } = require('bluebird');
-import { cropScreenshot } from './crop_screenshot';
+const { oneThenCrop } = require('./one_then_crop');
+const { instrument } = require('./instrument');
 
 const delay = (ms) => new Promise(resolve => setTimeout(() => resolve(), ms));
 
-const instrument = async (description, promise) => {
-  const start = new Date();
-  const result = await promise;
-  console.log(`${description} took ${new Date() - start} ticks`);
-  return result;
-};
 
 const width = 1950;
 const height = 1200;
@@ -156,24 +150,7 @@ const url = `http://10.0.1.24:5601/app/kibana#/dashboard/ce22fbb0-778e-11e7-a6c7
 
     const elementPositions = result.result.value;
 
-    const { data } = await instrument('screenshot', Page.captureScreenshot({ fromSurface: true }));
-    const buffer = Buffer.from(data, 'base64');
-
-    const writePath = path.join(__dirname, `screenshot-${fileSuffix}.png`)
-    await promisify(fs.writeFile, fs)(writePath, buffer);
-
-    let i = 0;
-    for (const item of elementPositions) {
-        const partPath = path.join(__dirname, `screenshot-${fileSuffix}-${i++}.png`)
-        const { scroll, boundingClientRect } = item.position;
-        const cropPosition = {
-            x: scroll.x + (boundingClientRect.x * zoom),
-            y: scroll.y + (boundingClientRect.y * zoom),
-            height: boundingClientRect.height * zoom,
-            width: boundingClientRect.width * zoom,
-        };
-        await cropScreenshot(buffer, cropPosition, partPath);
-    }
+    await instrument('one then crop', oneThenCrop(fileSuffix, Page, elementPositions, zoom));
 
     protocol.close();
     chrome.kill();
