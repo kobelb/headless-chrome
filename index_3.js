@@ -29,7 +29,7 @@ if (platform === 'linux') {
     throw new Error(msg);
 }
 
-const url = `http://10.0.1.24:5601/app/kibana#/dashboard/ce22fbb0-778e-11e7-a6c7-ff2fd5300286?_g=(refreshInterval:(display:Off,pause:!f,value:0),time:(from:now-60d,mode:quick,to:now))&_a=(description:'',filters:!(),fullScreenMode:!f,options:(darkTheme:!f),panels:!((col:7,id:a42ec780-778e-11e7-a6c7-ff2fd5300286,panelIndex:2,row:1,size_x:6,size_y:3,type:visualization),(col:1,id:adb151b0-778e-11e7-a6c7-ff2fd5300286,panelIndex:3,row:1,size_x:6,size_y:3,type:visualization),(col:1,columns:!(referer,url),id:bd793c70-778e-11e7-a6c7-ff2fd5300286,panelIndex:4,row:4,size_x:6,size_y:3,sort:!('@timestamp',desc),type:search)),query:(language:lucene,query:''),timeRestore:!f,title:'New%20Dashboard',uiState:(),viewMode:view)`;
+const url = `file://${path.join(__dirname, 'index.html')}`;
 
 (async function () {
     console.log('launching');
@@ -85,12 +85,6 @@ const url = `http://10.0.1.24:5601/app/kibana#/dashboard/ce22fbb0-778e-11e7-a6c7
     });
 
     await Runtime.evaluate({ expression: `
-    var injectCss = function(cssPath) {
-        var node = document.createElement('link');
-        node.rel = 'stylesheet';
-        node.href = cssPath;
-        document.getElementsByTagName('head')[0].appendChild(node);
-    };
 
     var positionElements = function(selector, height, width) {
         var visualizations = document.querySelectorAll(selector);
@@ -108,7 +102,6 @@ const url = `http://10.0.1.24:5601/app/kibana#/dashboard/ce22fbb0-778e-11e7-a6c7
         }
     }
 
-    injectCss('http://10.0.1.24:5601/plugins/reporting/styles/reporting-overrides.css');
     positionElements('[data-shared-item]', 1200/${zoom}, 1950/${zoom});
     ` });
     

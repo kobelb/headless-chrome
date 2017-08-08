@@ -1,0 +1,15 @@
+macOS
+```
+git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+export PATH="$PATH:$(grealpath ./depot_tools)"
+mkdir chromium && cd chromium
+fetch
+cd src
+git fetch --tags
+git checkout tags/62.0.3179.0
+
+mkdir -p out/Debug
+echo 'import("//build/args/headless.gn")' > out/Debug/args.gn
+gn gen out/Debug
+ninja -C out/Debug headless_shell
+```

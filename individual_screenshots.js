@@ -5,7 +5,7 @@ import { instrument } from './instrument';
 
 export async function individualScreenshots(fileSuffix, Page, elementPositions, zoom) {
 
-    const { data } = await instrument('screenshot', Page.captureScreenshot({ fromSurface: true }));
+    const { data } = await instrument('screenshot', Page.captureScreenshot());
     const buffer = Buffer.from(data, 'base64');
 
     const writePath = path.join(__dirname, `screenshot-is-${fileSuffix}.png`)
@@ -22,7 +22,7 @@ export async function individualScreenshots(fileSuffix, Page, elementPositions, 
             scale: 1
         };
 
-        const { data } = await instrument('individual screenshot', Page.captureScreenshot({ clip  }));
+        const { data } = await instrument('individual screenshot', Page.captureScreenshot({ clip }));
         const buffer = Buffer.from(data, 'base64');
         const writePath = path.join(__dirname, `screenshot-is-${fileSuffix}-${i++}.png`)
         await promisify(fs.writeFile, fs)(writePath, buffer);
