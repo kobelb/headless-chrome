@@ -19,7 +19,7 @@ if (platform === 'linux') {
     chromePath = path.join(__dirname, 'chrome-linux/chrome');
     fileSuffix = 'linux';
 } else if (platform === 'darwin' || platform === 'openbsd' || platform === 'freebsd') {
-    chromePath = path.join(__dirname, 'chrome-mac/Chromium.app/Contents/MacOS/Chromium');
+    chromePath = '/Users/kobelb/Projects/google/chromium/src/out/Default/headless_shell';
     fileSuffix = 'mac';
 } else if (platform === 'win32') {
     chromePath = path.join(__dirname, 'chrome-win32\\chrome.exe')
@@ -29,7 +29,7 @@ if (platform === 'linux') {
     throw new Error(msg);
 }
 
-const url = `http://10.0.1.24:5601/app/kibana#/dashboard/ce22fbb0-778e-11e7-a6c7-ff2fd5300286?_g=(refreshInterval:(display:Off,pause:!f,value:0),time:(from:now-60d,mode:quick,to:now))&_a=(description:'',filters:!(),fullScreenMode:!f,options:(darkTheme:!f),panels:!((col:7,id:a42ec780-778e-11e7-a6c7-ff2fd5300286,panelIndex:2,row:1,size_x:6,size_y:3,type:visualization),(col:1,id:adb151b0-778e-11e7-a6c7-ff2fd5300286,panelIndex:3,row:1,size_x:6,size_y:3,type:visualization),(col:1,columns:!(referer,url),id:bd793c70-778e-11e7-a6c7-ff2fd5300286,panelIndex:4,row:4,size_x:6,size_y:3,sort:!('@timestamp',desc),type:search)),query:(language:lucene,query:''),timeRestore:!f,title:'New%20Dashboard',uiState:(),viewMode:view)`;
+const url = `http://localhost:5601/app/kibana#/dashboard/ce22fbb0-778e-11e7-a6c7-ff2fd5300286?_g=(refreshInterval:(display:Off,pause:!f,value:0),time:(from:now-60d,mode:quick,to:now))&_a=(description:'',filters:!(),fullScreenMode:!f,options:(darkTheme:!f),panels:!((col:7,id:a42ec780-778e-11e7-a6c7-ff2fd5300286,panelIndex:2,row:1,size_x:6,size_y:3,type:visualization),(col:1,id:adb151b0-778e-11e7-a6c7-ff2fd5300286,panelIndex:3,row:1,size_x:6,size_y:3,type:visualization),(col:1,columns:!(referer,url),id:bd793c70-778e-11e7-a6c7-ff2fd5300286,panelIndex:4,row:4,size_x:6,size_y:3,sort:!('@timestamp',desc),type:search),(col:7,id:a42ec780-778e-11e7-a6c7-ff2fd5300286,panelIndex:5,row:4,size_x:6,size_y:3,type:visualization),(col:1,id:abc04d90-7782-11e7-acec-e3dded62aa32,panelIndex:6,row:7,size_x:6,size_y:3,type:visualization),(col:7,id:a42ec780-778e-11e7-a6c7-ff2fd5300286,panelIndex:7,row:7,size_x:6,size_y:3,type:visualization),(col:1,id:abc04d90-7782-11e7-acec-e3dded62aa32,panelIndex:8,row:10,size_x:6,size_y:3,type:visualization),(col:7,id:adb151b0-778e-11e7-a6c7-ff2fd5300286,panelIndex:9,row:10,size_x:6,size_y:3,type:visualization),(col:1,id:a42ec780-778e-11e7-a6c7-ff2fd5300286,panelIndex:10,row:13,size_x:6,size_y:3,type:visualization),(col:7,id:abc04d90-7782-11e7-acec-e3dded62aa32,panelIndex:11,row:13,size_x:6,size_y:3,type:visualization),(col:1,id:a42ec780-778e-11e7-a6c7-ff2fd5300286,panelIndex:12,row:16,size_x:6,size_y:3,type:visualization),(col:7,id:adb151b0-778e-11e7-a6c7-ff2fd5300286,panelIndex:13,row:16,size_x:6,size_y:3,type:visualization),(col:1,id:a42ec780-778e-11e7-a6c7-ff2fd5300286,panelIndex:14,row:19,size_x:6,size_y:3,type:visualization),(col:7,id:abc04d90-7782-11e7-acec-e3dded62aa32,panelIndex:15,row:19,size_x:6,size_y:3,type:visualization),(col:1,id:a42ec780-778e-11e7-a6c7-ff2fd5300286,panelIndex:16,row:22,size_x:6,size_y:3,type:visualization),(col:7,id:adb151b0-778e-11e7-a6c7-ff2fd5300286,panelIndex:17,row:22,size_x:6,size_y:3,type:visualization),(col:1,id:a42ec780-778e-11e7-a6c7-ff2fd5300286,panelIndex:18,row:25,size_x:6,size_y:3,type:visualization),(col:7,id:abc04d90-7782-11e7-acec-e3dded62aa32,panelIndex:19,row:25,size_x:6,size_y:3,type:visualization)),query:(language:lucene,query:''),timeRestore:!f,title:'New%20Dashboard',uiState:(),viewMode:view)`;
 
 (async function () {
     console.log('launching');
@@ -108,7 +108,7 @@ const url = `http://10.0.1.24:5601/app/kibana#/dashboard/ce22fbb0-778e-11e7-a6c7
         }
     }
 
-    injectCss('http://10.0.1.24:5601/plugins/reporting/styles/reporting-overrides.css');
+    injectCss('http://localhost:5601/plugins/reporting/styles/reporting-overrides.css');
     positionElements('[data-shared-item]', 1200/${zoom}, 1950/${zoom});
     ` });
     

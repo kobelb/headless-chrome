@@ -9,14 +9,7 @@ git fetch --tags
 git checkout tags/62.0.3179.0
 gclient sync --with_branch_heads --jobs 16
 mkdir -p out/Debug
+echo 'import("//build/args/headless.gn")' > out/Headless/args.gn
 gn gen out/Debug
 ninja -C out/Debug headless_shell
 ```
-
-
-##args.gn
-is_debug = false
-symbol_level = 0
-is_component_build = false
-remove_webcore_debug_symbols = true
-enable_nacl = false
